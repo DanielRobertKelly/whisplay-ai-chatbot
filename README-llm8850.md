@@ -38,7 +38,34 @@ We also did similar modifications to run a local web service for TTS.
 
 - Check out this link: https://github.com/PiSugar/melotts.axcl
 
-Please follow the instructions in the README file to set up the LLM8850 melotts TTS service. After that, you can set the `LLM8850_MELOTTS_HOST` variable in the `.env` file to point to your LLM8850 melotts TTS service.
+Please follow the instructions in the README file to set up the LLM8850 melotts TTS service. After that, you can set the `LLM8850_MELOTTS_HOST` variable in the `.env` file to point to your LLM8850 melotts TTS service. If your melotts service supports multiple voices, set `LLM8850_MELOTTS_SPEAKER` to the preferred speaker/voice name and the chatbot will pass it through to the `/synthesize` request.
+
+### Optional: Piper TTS instead of Melotts
+
+If you prefer Piper over Melotts on the LLM8850, you can use the built-in Piper integrations and keep the same local performance profile (all TTS stays on-device).
+
+**Option A: Local Piper binary**
+
+1. Install Piper and a voice model on the LLM8850 host.
+2. Set the following in `.env`:
+
+```
+TTS_SERVER=piper
+PIPER_BINARY_PATH=/home/pi/piper/piper
+PIPER_MODEL_PATH=/home/pi/piper/voices/en_US-amy-medium.onnx
+```
+
+**Option B: Piper HTTP server**
+
+If you'd rather run the HTTP server (useful if you want to keep Piper running in the background or call it from multiple processes):
+
+```
+TTS_SERVER=piper-http
+PIPER_HTTP_HOST=localhost
+PIPER_HTTP_PORT=8805
+PIPER_HTTP_MODEL=en_US-amy-medium
+PIPER_HTTP_LENGTH_SCALE=1
+```
 
 ### LLM8850 Qwen3 LLM API
 
@@ -157,6 +184,19 @@ LLM8850_LLM_HOST=http://localhost:8000
 LLM8850_LLM_TEMPERATURE=0.7
 LLM8850_WHISPER_HOST=http://localhost:8801
 LLM8850_MELOTTS_HOST=http://localhost:8802
+LLM8850_MELOTTS_SPEAKER=your_preferred_voice
+
+# Piper (optional)
+# TTS_SERVER=piper
+# PIPER_BINARY_PATH=/home/pi/piper/piper
+# PIPER_MODEL_PATH=/home/pi/piper/voices/en_US-amy-medium.onnx
+#
+# Piper HTTP (optional)
+# TTS_SERVER=piper-http
+# PIPER_HTTP_HOST=localhost
+# PIPER_HTTP_PORT=8805
+# PIPER_HTTP_MODEL=en_US-amy-medium
+# PIPER_HTTP_LENGTH_SCALE=1
 ```
 
 ### Note
