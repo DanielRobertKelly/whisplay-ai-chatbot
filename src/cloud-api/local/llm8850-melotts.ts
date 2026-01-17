@@ -9,7 +9,10 @@ import { defaultPortMap } from "./common";
 
 dotenv.config();
 
-const melottsHost = process.env.LLM8850_MELOTTS_HOST || `http://localhost:${defaultPortMap.llm8850melotts}`;
+const melottsHost =
+  process.env.LLM8850_MELOTTS_HOST ||
+  `http://localhost:${defaultPortMap.llm8850melotts}`;
+const melottsSpeaker = process.env.LLM8850_MELOTTS_SPEAKER;
 
 let currentRequest: Promise<boolean> | null = null;
 let currentRequestResolve: ((value: boolean) => void) | null = null;
@@ -42,6 +45,7 @@ const meloTTS = async (
         // for compatibility with older meloTTS servers
         output_path: tempWavFile,
         base64: true,
+        ...(melottsSpeaker ? { speaker: melottsSpeaker } : {}),
       })
       .then(async (response) => {
         clearTimeout(timeoutId);
